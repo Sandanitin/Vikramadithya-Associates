@@ -1,46 +1,76 @@
-const HeroSection = ({ title, subtitle, buttonText, buttonLink, bgColor = 'bg-[#0B2545]', backgroundImage }) => {
-  // Determine text color based on background
-  const textColor = backgroundImage ? 'text-[#0B2545]' : 'text-white';
-  const subtitleColor = backgroundImage ? 'text-[#222222]' : 'text-[#F5E6CA]';
-  
+import { Link } from 'react-router-dom';
+
+const HeroSection = ({ 
+  title, 
+  subtitle, 
+  buttonText, 
+  buttonLink, 
+  backgroundImage 
+}) => {
   return (
-    <div className={`relative ${bgColor} text-white overflow-hidden`}>
-      {backgroundImage ? (
-        <div 
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${backgroundImage})` }}
-        >
-          <div className="absolute inset-0 bg-white bg-opacity-80"></div>
-        </div>
-      ) : (
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0B2545] to-[#134B70]"></div>
-      )}
-      <div className="relative max-w-7xl mx-auto px-4 py-28 sm:px-6 lg:px-8">
-        <div className="text-center">
-          <h1 className={`text-4xl md:text-6xl font-extrabold tracking-tight mb-6 ${textColor}`}>
-            <span className="block">{title}</span>
-          </h1>
-          <p className={`mt-4 max-w-2xl mx-auto text-xl md:text-2xl sm:text-lg md:mt-6 md:max-w-3xl ${subtitleColor}`}>
-            {subtitle}
-          </p>
-          {buttonText && (
-            <div className="mt-12 flex justify-center">
-              <div className="rounded-md shadow-lg transform transition-all duration-300 hover:scale-105">
-                <a
-                  href={buttonLink || '#'}
-                  className="w-full flex items-center justify-center px-10 py-4 border border-transparent text-base font-bold rounded-md text-[#0B2545] bg-[#D4AF37] hover:bg-[#F5E6CA] md:py-5 md:text-xl md:px-12 transition-all duration-300 shadow-lg"
-                >
-                  {buttonText}
-                  <svg className="ml-3 -mr-1 h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                  </svg>
-                </a>
+    <section 
+      className="relative w-full min-h-[85vh] flex items-center overflow-hidden"
+      style={{ 
+        backgroundImage: backgroundImage ? `url(${backgroundImage})` : 'none',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center'
+      }}
+    >
+      {/* Overlay for better text visibility */}
+      <div className="absolute inset-0 bg-black/80"></div>
+      
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          {/* Text Content */}
+          <div className="text-left">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-[#D4AF37] mb-6 leading-tight drop-shadow-lg">
+              {title}
+            </h1>
+            <p className="text-xl md:text-2xl text-gray-200 mb-10 max-w-2xl leading-relaxed drop-shadow-md">
+              {subtitle}
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Link
+                to={buttonLink}
+                className="inline-flex items-center justify-center px-8 py-4 bg-[#D4AF37] text-[#0B2545] font-bold text-lg rounded-lg hover:bg-yellow-500 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+              >
+                {buttonText}
+              </Link>
+              <Link
+                to="/contact"
+                className="inline-flex items-center justify-center px-8 py-4 bg-white text-[#0B2545] font-bold text-lg rounded-lg hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+              >
+                Contact Us
+              </Link>
+            </div>
+          </div>
+          
+          {/* Visual Element */}
+          <div className="hidden lg:block">
+            <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-8 border border-white/30">
+              <div className="grid grid-cols-2 gap-6">
+                <div className="bg-white/30 p-6 rounded-xl text-center shadow-lg backdrop-blur-sm">
+                  <div className="text-4xl font-bold text-black mb-2">1000+</div>
+                  <div className="text-black font-medium">Clients Served</div>
+                </div>
+                <div className="bg-white/30 p-6 rounded-xl text-center shadow-lg backdrop-blur-sm">
+                  <div className="text-4xl font-bold text-black mb-2">500+</div>
+                  <div className="text-black font-medium">Projects Completed</div>
+                </div>
+                <div className="bg-white/30 p-6 rounded-xl text-center shadow-lg backdrop-blur-sm">
+                  <div className="text-4xl font-bold text-black mb-2">8+</div>
+                  <div className="text-black font-medium">Years Experience</div>
+                </div>
+                <div className="bg-white/30 p-6 rounded-xl text-center shadow-lg backdrop-blur-sm">
+                  <div className="text-4xl font-bold text-black mb-2">50+</div>
+                  <div className="text-black font-medium">Service Categories</div>
+                </div>
               </div>
             </div>
-          )}
+          </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

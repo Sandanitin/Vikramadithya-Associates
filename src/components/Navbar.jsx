@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import categories from '../data/categories';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isServicesDropdownOpen, setIsServicesDropdownOpen] = useState(false);
   const location = useLocation();
 
   const navLinks = [
@@ -24,19 +26,64 @@ const Navbar = () => {
           
           {/* Desktop menu */}
           <div className="hidden md:flex items-center space-x-10">
-            {navLinks.map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                className={`px-4 py-3 rounded-lg text-lg font-bold transition-all duration-300 ${
-                  location.pathname === link.path
-                    ? 'text-[#D4AF37] bg-[#134B70]'
-                    : 'text-white hover:text-[#D4AF37] hover:bg-[#134B70]'
-                }`}
-              >
-                {link.name}
-              </Link>
-            ))}
+            {navLinks.map((link) => {
+              if (link.name === 'Services') {
+                return (
+                  <div 
+                    key={link.path}
+                    className="relative"
+                    onMouseEnter={() => setIsServicesDropdownOpen(true)}
+                    onMouseLeave={() => setIsServicesDropdownOpen(false)}
+                  >
+                    <Link
+                      to={link.path}
+                      className={`px-4 py-3 rounded-lg text-lg font-bold transition-all duration-300 flex items-center ${
+                        location.pathname === link.path
+                          ? 'text-[#D4AF37] bg-[#134B70]'
+                          : 'text-white hover:text-[#D4AF37] hover:bg-[#134B70]'
+                      }`}
+                    >
+                      {link.name}
+                      <svg className="ml-1 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+                      </svg>
+                    </Link>
+                    
+                    {/* Dropdown menu */}
+                    {isServicesDropdownOpen && (
+                      <div className="absolute left-0 mt-2 w-64 bg-white rounded-lg shadow-xl z-50">
+                        <div className="py-2">
+                          {categories.map((category) => (
+                            <Link
+                              key={category.id}
+                              to={`/category/${category.id}`}
+                              className="block px-6 py-3 text-[#0B2545] hover:bg-[#F5E6CA] hover:text-[#0B2545] transition-colors duration-200 flex items-center"
+                            >
+                              <span className="text-xl mr-3">{category.icon}</span>
+                              <span className="font-medium">{category.name}</span>
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+              
+              return (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  className={`px-4 py-3 rounded-lg text-lg font-bold transition-all duration-300 ${
+                    location.pathname === link.path
+                      ? 'text-[#D4AF37] bg-[#134B70]'
+                      : 'text-white hover:text-[#D4AF37] hover:bg-[#134B70]'
+                  }`}
+                >
+                  {link.name}
+                </Link>
+              );
+            })}
           </div>
           
           {/* Mobile menu button */}

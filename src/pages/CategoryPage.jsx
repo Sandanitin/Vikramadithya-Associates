@@ -6,6 +6,7 @@ import services from '../data/services';
 const CategoryPage = () => {
   const { categoryId, serviceId } = useParams();
   const [searchTerm, setSearchTerm] = useState('');
+  const [expandedCategories, setExpandedCategories] = useState({});
   
   // Find the category
   const category = categories.find(cat => cat.id === categoryId);
@@ -24,6 +25,49 @@ const CategoryPage = () => {
       sub.toLowerCase().includes(searchTerm.toLowerCase())
     )
   );
+
+  // Group services by main category
+  const groupServicesByCategory = (servicesList) => {
+    const grouped = [];
+    let currentMainCategory = null;
+    let currentSubCategories = [];
+    
+    servicesList.forEach((service, index) => {
+      if (!service.startsWith('  •')) {
+        // If we have a previous main category, save it
+        if (currentMainCategory) {
+          grouped.push({
+            mainCategory: currentMainCategory,
+            subCategories: currentSubCategories
+          });
+        }
+        // Start new main category
+        currentMainCategory = service;
+        currentSubCategories = [];
+      } else {
+        // Add to subcategories
+        currentSubCategories.push(service);
+      }
+    });
+    
+    // Don't forget the last category
+    if (currentMainCategory) {
+      grouped.push({
+        mainCategory: currentMainCategory,
+        subCategories: currentSubCategories
+      });
+    }
+    
+    return grouped;
+  };
+
+  // Toggle category expansion
+  const toggleCategory = (categoryName) => {
+    setExpandedCategories(prev => ({
+      ...prev,
+      [categoryName]: !prev[categoryName]
+    }));
+  };
 
   // If specific service is requested, show only that service
   if (specificService) {
@@ -86,6 +130,9 @@ const CategoryPage = () => {
     );
   }
 
+  // Group services for dropdown functionality
+  const groupedServices = groupServicesByCategory(category.services);
+
   return (
     <div className="min-h-screen bg-[#FAF8F1]">
       {/* Hero Section */}
@@ -133,7 +180,7 @@ const CategoryPage = () => {
               Services in {category.name}
             </h2>
             <p className="mt-4 max-w-2xl mx-auto text-xl text-[#222222]">
-              Explore our comprehensive range of {category.name.toLowerCase()} services
+              Explore our comprehensive range of {category.name.toLowerCase()}
             </p>
           </div>
 
@@ -141,15 +188,44 @@ const CategoryPage = () => {
             <div className="bg-white rounded-lg shadow-lg p-8">
               <div className="text-center">
                 <h3 className="text-2xl font-bold text-[#0B2545] mb-4">Services Overview</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {category.services.map((service, index) => (
-                    <div key={index} className="p-4 bg-[#F5E6CA] rounded-lg">
-                      <div className="flex items-center">
-                        <svg className="h-5 w-5 text-[#0B2545] mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                <div className="space-y-4">
+                  {groupedServices.map((group, index) => (
+                    <div key={index} className="border border-[#E2E8F0] rounded-lg overflow-hidden">
+                      <div 
+                        className="flex justify-between items-center p-4 bg-[#F5E6CA] cursor-pointer hover:bg-[#F5E6CA]/80 transition-colors duration-200"
+                        onClick={() => toggleCategory(group.mainCategory)}
+                      >
+                        <div className="flex items-center">
+                          <svg className="h-5 w-5 text-[#0B2545] mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
+                          </svg>
+                          <span className="text-[#0B2545] font-bold">{group.mainCategory.replace('  • ', '')}</span>
+                        </div>
+                        <svg 
+                          className={`h-5 w-5 text-[#0B2545] transform transition-transform duration-200 ${expandedCategories[group.mainCategory] ? 'rotate-180' : ''}`}
+                          fill="none" 
+                          stroke="currentColor" 
+                          viewBox="0 0 24 24" 
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
                         </svg>
-                        <span className="text-[#0B2545] font-medium">{service}</span>
                       </div>
+                      
+                      {expandedCategories[group.mainCategory] && (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4 bg-white">
+                          {group.subCategories.map((subCategory, subIndex) => (
+                            <div key={subIndex} className="p-3 bg-[#F5E6CA]/50 rounded-lg border-l-4 border-[#D4AF37] hover:shadow-sm transition-shadow duration-300">
+                              <div className="flex items-center">
+                                <svg className="h-4 w-4 text-[#0B2545] mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                <span className="text-[#0B2545] font-medium text-sm">{subCategory.replace('  • ', '')}</span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>

@@ -6,16 +6,8 @@ import categories from '../data/categories';
 import services from '../data/services';
 
 const Services = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-
-  // Filter categories based on search term
-  const filteredCategories = categories.filter(category =>
-    category.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    category.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    category.services.some(service => 
-      service.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-  );
+  // Get all categories without filtering
+  const allCategories = categories;
 
   // Get financial services
   const financialServices = services.filter(service => 
@@ -44,38 +36,8 @@ const Services = () => {
 
   return (
     <div>
-      {/* Hero Section */}
-      <HeroSection
-        title="Our Comprehensive Services"
-        subtitle="From financial solutions to government services - we've got you covered"
-        buttonText="Get a Quote"
-        buttonLink="/contact"
-      />
-
-      {/* Search and Filter */}
-      <section className="py-8 bg-[#FAF8F1]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-2xl mx-auto">
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg className="h-5 w-5 text-[#222222]" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                  <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd"></path>
-                </svg>
-              </div>
-              <input
-                type="text"
-                className="block w-full pl-10 pr-3 py-2 border border-[#222222] rounded-md leading-5 bg-white placeholder-[#222222] focus:outline-none focus:placeholder-[#134B70] focus:ring-1 focus:ring-[#134B70] focus:border-[#134B70] sm:text-sm"
-                placeholder="Search services..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Categories Overview */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-[#FAF8F1]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h2 className="text-3xl font-extrabold text-[#0B2545] sm:text-4xl">
@@ -86,38 +48,52 @@ const Services = () => {
             </p>
           </div>
 
-          {filteredCategories.length === 0 ? (
-            <div className="text-center py-12">
-              <svg className="mx-auto h-12 w-12 text-[#134B70]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-              <h3 className="mt-2 text-xl font-medium text-[#0B2545]">No services found</h3>
-              <p className="mt-1 text-[#222222]">
-                Try adjusting your search to find what you're looking for.
-              </p>
-              <div className="mt-6">
-                <button
-                  onClick={() => setSearchTerm('')}
-                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-[#0B2545] hover:bg-[#134B70] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#134B70]"
+          <div className="mt-12">
+            {/* Main Categories */}
+            <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mb-16">
+              {allCategories.map((category) => (
+                <Link 
+                  key={category.id}
+                  to={`/category/${category.id}`}
+                  className="block bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
                 >
-                  Clear Search
-                </button>
-              </div>
+                  <div className="p-6">
+                    <div className="text-4xl mb-4 text-[#0B2545]">{category.icon}</div>
+                    <h3 className="text-xl font-bold text-[#0B2545] mb-2">{category.name}</h3>
+                    <p className="text-[#222222] mb-4">{category.description}</p>
+                    <span className="inline-flex items-center text-[#134B70] hover:text-[#D4AF37] font-medium">
+                      View Details
+                      <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
+                      </svg>
+                    </span>
+                  </div>
+                </Link>
+              ))}
             </div>
-          ) : (
-            <div className="mt-12">
-              {/* Main Categories */}
-              <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mb-16">
-                {filteredCategories.map((category) => (
+
+            {/* Financial Services Details */}
+            <div className="mt-16">
+              <div className="text-center mb-12">
+                <h2 className="text-3xl font-extrabold text-[#0B2545] sm:text-4xl">
+                  Financial Services
+                </h2>
+                <p className="mt-4 max-w-2xl mx-auto text-xl text-[#222222]">
+                  Detailed financial solutions for your business needs
+                </p>
+              </div>
+
+              <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+                {financialServices.map((service) => (
                   <Link 
-                    key={category.id}
-                    to={`/category/${category.id}`}
+                    key={service.id}
+                    to={`/category/${service.categoryId}/${service.id}`}
                     className="block bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
                   >
                     <div className="p-6">
-                      <div className="text-4xl mb-4 text-[#0B2545]">{category.icon}</div>
-                      <h3 className="text-xl font-bold text-[#0B2545] mb-2">{category.name}</h3>
-                      <p className="text-[#222222] mb-4">{category.description}</p>
+                      <div className="text-4xl mb-4 text-[#0B2545]">{getFinancialServiceIcon(service.name)}</div>
+                      <h3 className="text-xl font-bold text-[#0B2545] mb-2">{service.name}</h3>
+                      <p className="text-[#222222] mb-4">{service.description}</p>
                       <span className="inline-flex items-center text-[#134B70] hover:text-[#D4AF37] font-medium">
                         View Details
                         <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -128,107 +104,73 @@ const Services = () => {
                   </Link>
                 ))}
               </div>
-
-              {/* Financial Services Details */}
-              <div className="mt-16">
-                <div className="text-center mb-12">
-                  <h2 className="text-3xl font-extrabold text-[#0B2545] sm:text-4xl">
-                    Financial Services
-                  </h2>
-                  <p className="mt-4 max-w-2xl mx-auto text-xl text-[#222222]">
-                    Detailed financial solutions for your business needs
-                  </p>
-                </div>
-
-                <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-                  {financialServices.map((service) => (
-                    <Link 
-                      key={service.id}
-                      to={`/category/${service.categoryId}/${service.id}`}
-                      className="block bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
-                    >
-                      <div className="p-6">
-                        <div className="text-4xl mb-4 text-[#0B2545]">{getFinancialServiceIcon(service.name)}</div>
-                        <h3 className="text-xl font-bold text-[#0B2545] mb-2">{service.name}</h3>
-                        <p className="text-[#222222] mb-4">{service.description}</p>
-                        <span className="inline-flex items-center text-[#134B70] hover:text-[#D4AF37] font-medium">
-                          View Details
-                          <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
-                          </svg>
-                        </span>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              </div>
             </div>
-          )}
+          </div>
         </div>
       </section>
 
       {/* Why Work With Us */}
-      <section className="py-16 bg-[#F5E6CA]">
+      <section className="py-16 bg-[#0B2545]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-3xl font-extrabold text-[#0B2545] sm:text-4xl">
+            <h2 className="text-3xl font-extrabold text-white sm:text-4xl">
               Why Work With Us
             </h2>
           </div>
 
           <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-            <div className="text-center bg-white p-6 rounded-lg shadow-lg">
+            <div className="text-center bg-[#134B70] p-6 rounded-lg shadow-lg">
               <div className="flex justify-center">
-                <div className="flex items-center justify-center h-12 w-12 rounded-full bg-[#0B2545] text-white">
+                <div className="flex items-center justify-center h-12 w-12 rounded-full bg-[#D4AF37] text-[#0B2545]">
                   <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                   </svg>
                 </div>
               </div>
-              <h3 className="mt-4 text-lg font-bold text-[#0B2545]">Customized Solutions</h3>
-              <p className="mt-2 text-[#222222]">
+              <h3 className="mt-4 text-lg font-bold text-white">Customized Solutions</h3>
+              <p className="mt-2 text-[#F5E6CA]">
                 Tailored services to meet your specific requirements and goals.
               </p>
             </div>
 
-            <div className="text-center bg-white p-6 rounded-lg shadow-lg">
+            <div className="text-center bg-[#134B70] p-6 rounded-lg shadow-lg">
               <div className="flex justify-center">
-                <div className="flex items-center justify-center h-12 w-12 rounded-full bg-[#0B2545] text-white">
+                <div className="flex items-center justify-center h-12 w-12 rounded-full bg-[#D4AF37] text-[#0B2545]">
                   <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                   </svg>
                 </div>
               </div>
-              <h3 className="mt-4 text-lg font-bold text-[#0B2545]">Affordable Pricing</h3>
-              <p className="mt-2 text-[#222222]">
+              <h3 className="mt-4 text-lg font-bold text-white">Affordable Pricing</h3>
+              <p className="mt-2 text-[#F5E6CA]">
                 Competitive rates without compromising on quality or service.
               </p>
             </div>
 
-            <div className="text-center bg-white p-6 rounded-lg shadow-lg">
+            <div className="text-center bg-[#134B70] p-6 rounded-lg shadow-lg">
               <div className="flex justify-center">
-                <div className="flex items-center justify-center h-12 w-12 rounded-full bg-[#0B2545] text-white">
+                <div className="flex items-center justify-center h-12 w-12 rounded-full bg-[#D4AF37] text-[#0B2545]">
                   <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                   </svg>
                 </div>
               </div>
-              <h3 className="mt-4 text-lg font-bold text-[#0B2545]">Quick Delivery</h3>
-              <p className="mt-2 text-[#222222]">
+              <h3 className="mt-4 text-lg font-bold text-white">Quick Delivery</h3>
+              <p className="mt-2 text-[#F5E6CA]">
                 Efficient processes to ensure timely completion of all services.
               </p>
             </div>
 
-            <div className="text-center bg-white p-6 rounded-lg shadow-lg">
+            <div className="text-center bg-[#134B70] p-6 rounded-lg shadow-lg">
               <div className="flex justify-center">
-                <div className="flex items-center justify-center h-12 w-12 rounded-full bg-[#0B2545] text-white">
+                <div className="flex items-center justify-center h-12 w-12 rounded-full bg-[#D4AF37] text-[#0B2545]">
                   <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
                   </svg>
                 </div>
               </div>
-              <h3 className="mt-4 text-lg font-bold text-[#0B2545]">Dedicated Support</h3>
-              <p className="mt-2 text-[#222222]">
+              <h3 className="mt-4 text-lg font-bold text-white">Dedicated Support</h3>
+              <p className="mt-2 text-[#F5E6CA]">
                 Personalized assistance throughout your service journey.
               </p>
             </div>
@@ -237,7 +179,7 @@ const Services = () => {
       </section>
 
       {/* Call to Action */}
-      <section className="py-16 bg-[#0B2545]">
+      <section className="py-16 bg-gradient-to-r from-[#134B70] to-[#0B2545]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h2 className="text-3xl font-extrabold text-white sm:text-4xl">
