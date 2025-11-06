@@ -26,11 +26,13 @@ const About = () => {
 
           <div className="flex flex-col md:flex-row gap-8 items-center">
             <div className="md:w-1/2">
-              <img
-                src="about.jpg"
-                alt="Our service center team"
-                className="rounded-lg shadow-lg w-full h-auto object-cover"
-              />
+              <div className="relative w-full h-96 overflow-hidden rounded-lg shadow-lg">
+                <img
+                  src="/about.jpg"
+                  alt="Our team at work"
+                  className="w-full h-full object-cover"
+                />
+              </div>
             </div>
             <div className="md:w-1/2 text-[#222222]">
               <div className="prose max-w-none">
@@ -85,7 +87,7 @@ const About = () => {
               <div className="p-6 flex flex-col items-center">
                 <figure className="w-full flex justify-center mb-4">
                   <img
-                    src="certificate1.jpg"
+                    src="/certificate1.jpg"
                     alt="Professional Certification issued by Chartered Institute"
                     loading="lazy"
                     className="max-w-full h-auto max-h-52 object-contain rounded-md border"
@@ -110,7 +112,7 @@ const About = () => {
               <div className="p-6 flex flex-col items-center">
                 <figure className="w-full flex justify-center mb-4">
                   <img
-                    src="certificate2.jpg"
+                    src="/certificate2.jpg"
                     alt="Industry recognition plaque for service excellence"
                     loading="lazy"
                     className="max-w-full h-auto max-h-52 object-contain rounded-md border"
@@ -260,7 +262,7 @@ const About = () => {
           <div className="flex flex-col md:flex-row gap-8 items-center">
             <div className="md:w-1/2">
               <img
-                src="public/paper.jpg"
+                src="/paper.jpg"
                 alt="Bulk order Xerox service"
                 className="rounded-lg shadow-lg w-full h-auto object-cover"
               />

@@ -35,7 +35,7 @@ const About = () => {
               <div className="p-6 flex flex-col items-center">
                 <figure className="w-full flex justify-center mb-4">
                   <img
-                    src="certificate1.jpg"
+                    src="/certificate1.jpg"
                     alt="Professional Certification issued by Chartered Institute"
                     loading="lazy"
                     className="max-w-full h-auto max-h-52 object-contain rounded-md border"
@@ -60,7 +60,7 @@ const About = () => {
               <div className="p-6 flex flex-col items-center">
                 <figure className="w-full flex justify-center mb-4">
                   <img
-                    src="certificate2.jpg"
+                    src="/certificate2.jpg"
                     alt="Industry recognition plaque for service excellence"
                     loading="lazy"
                     className="max-w-full h-auto max-h-52 object-contain rounded-md border"
