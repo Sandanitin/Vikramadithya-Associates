@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Service Request Submission</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #0B2545;
+            color: #D4AF37;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+        }
+        .content {
+            background-color: #FAF8F1;
+            padding: 20px;
+            border: 1px solid #E2E8F0;
+        }
+        .field {
+            margin-bottom: 15px;
+        }
+        .label {
+            font-weight: bold;
+            color: #0B2545;
+        }
+        .footer {
+            background-color: #134B70;
+            color: #F5E6CA;
+            padding: 15px;
+            text-align: center;
+            border-radius: 0 0 5px 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>New Service Request</h1>
+    </div>
+    
+    <div class="content">
+        <div class="field">
+            <div class="label">Name:</div>
+            <div>{{name}}</div>
+        </div>
+        
+        <div class="field">
+            <div class="label">Email:</div>
+            <div>{{email}}</div>
+        </div>
+        
+        <div class="field">
+            <div class="label">Phone:</div>
+            <div>{{phone}}</div>
+        </div>
+        
+        <div class="field">
+            <div class="label">Service Requested:</div>
+            <div>{{service}}</div>
+        </div>
+        
+        <div class="field">
+            <div class="label">Additional Details:</div>
+            <div>{{message}}</div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>This service request was submitted from your website.</p>
+    </div>
+</body>
+</html>

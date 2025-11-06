@@ -257,6 +257,24 @@ const services = [
       'Credit Rebuilding Strategy 📈',
       'Identity Theft Resolution 🛡️'
     ]
+  },
+  // RTO Services
+  {
+    id: 'rto-services',
+    categoryId: 'rto-services',
+    name: 'RTO Services',
+    description: 'Complete vehicle and driving license related services',
+    subcategories: [
+      'Address Update 🏠',
+      'Mobile Number Update 📱',
+      'Driving License Apply 🆕',
+      'Driving License Renewal 🔁',
+      'Learner License Apply 🆕',
+      'License Slot Booking 📅',
+      'Fitness Certificate 🏃',
+      'NOC (No Objection Certificate) 📄',
+      'Ownership / Transfer Certificate 🔄'
+    ]
   }
 ];
 

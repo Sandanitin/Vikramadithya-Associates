@@ -1,0 +1,52 @@
+EMAILJS SETUP INSTRUCTIONS
+==========================
+
+1. LOG IN TO EMAILJS
+   - Go to https://www.emailjs.com/
+   - Sign in to your account (or create one if you don't have it)
+
+2. CREATE EMAIL TEMPLATES
+
+   For Contact Form:
+   a. Go to "Email Templates" section
+   b. Click "Create new template"
+   c. Set template name to "Contact Form Template"
+   d. Set template ID to "template_uvnmczx" (this matches your current code)
+   e. Copy the content from "emailjs_template.html" file and paste it into the template editor
+   f. Replace the placeholder content with the EmailJS template variables:
+      - {{name}} for the name field
+      - {{email}} for the email field
+      - {{phone}} for the phone field
+      - {{subject}} for the subject field
+      - {{message}} for the message field
+
+   For Service Request Forms:
+   a. Go to "Email Templates" section
+   b. Click "Create new template"
+   c. Set template name to "Service Request Template"
+   d. You can use the same template ID or create a new one
+   e. Copy the content from "emailjs_service_template.html" file and paste it into the template editor
+   f. Replace the placeholder content with the EmailJS template variables:
+      - {{name}} for the name field
+      - {{email}} for the email field
+      - {{phone}} for the phone field
+      - {{service}} for the service field
+      - {{message}} for the message field
+
+3. CONFIGURE EMAIL SERVICE
+   a. Go to "Email Services" section
+   b. Connect your email service (Gmail, Outlook, etc.)
+   c. Note the Service ID (should be "service_j1it8n7" to match your current code)
+
+4. UPDATE YOUR CODE (if needed)
+   The current implementation in your code uses:
+   - Service ID: service_j1it8n7
+   - Template ID: template_uvnmczx
+   - Public Key: h7cnMVE1nufu98OC7 (initialized in main.jsx)
+
+   If you create new templates with different IDs, update the Contact.jsx file accordingly.
+
+5. TEST YOUR SETUP
+   a. Save all changes
+   b. Test the contact form on your website
+   c. Check if emails are being received correctly

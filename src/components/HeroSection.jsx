@@ -11,7 +11,7 @@ const HeroSection = ({
     <section 
       className="relative w-full min-h-[85vh] flex items-center overflow-hidden"
       style={{ 
-        backgroundImage: backgroundImage ? url(${backgroundImage}) : 'none',
+        backgroundImage: backgroundImage ? `url(${backgroundImage})` : 'none',
         backgroundSize: 'cover',
         backgroundPosition: 'center'
       }}

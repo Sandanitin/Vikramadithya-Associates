@@ -2,7 +2,16 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
-import React from 'react';
+import emailjs from '@emailjs/browser'
+
+// Initialize EmailJS with public key
+emailjs.init('hmOEMpk3EBcfiiXS-')
+
+createRoot(document.getElementById('root')).render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+)
 // HeroSection import removed since we're not using it
 
 const About = () => {
@@ -158,13 +167,4 @@ const About = () => {
   );
 };
 
-export default About;import emailjs from '@emailjs/browser'
-
-// Initialize EmailJS with public key
-emailjs.init('h7cnMVE1nufu98OC7')
-
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
+export default About;

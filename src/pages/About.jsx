@@ -1,11 +1,17 @@
 import React from 'react';
 import HeroSection from '../components/HeroSection';
+import SEO from '../components/SEO';
 
 const About = () => {
   return (
     <div>
-   
-
+      <SEO 
+        title="About Us"
+        description="Learn about Vikramadithya Associates - Your trusted partner for loans, insurance, and financial solutions in Guntur, Andhra Pradesh. Discover our mission, values, and credentials."
+        keywords="about us, company information, mission, values, credentials, financial services, loan services, insurance services"
+        url="/about"
+      />
+    
       {/* Introduction */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -238,6 +244,54 @@ const About = () => {
             >
               Request Doorstep Service
             </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Bulk Order Special Offer */}
+      <section className="py-16 bg-[#FAF8F1]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-extrabold text-[#0B2545] sm:text-4xl">
+              Special Offer for Bulk Orders
+            </h2>
+          </div>
+
+          <div className="flex flex-col md:flex-row gap-8 items-center">
+            <div className="md:w-1/2">
+              <img
+                src="public/paper.jpg"
+                alt="Bulk order Xerox service"
+                className="rounded-lg shadow-lg w-full h-auto object-cover"
+              />
+            </div>
+            <div className="md:w-1/2 text-[#222222]">
+              <div className="prose max-w-none">
+                <h3 className="text-2xl font-bold text-[#0B2545] mb-4">Double-Sided Xerox at Unbeatable Rates</h3>
+                <p className="mb-4 text-xl">
+                  On bulk orders, we offer double-sided Xerox copies for just ₹1 per page.
+                </p>
+                <div className="mt-6 p-4 bg-[#F5E6CA] rounded-lg">
+                  <p className="text-lg font-semibold text-[#0B2545]">
+                    <svg className="h-5 w-5 inline mr-2 text-[#D4AF37]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4 4 0 003 15z"></path>
+                    </svg>
+                    Free Doorstep Service
+                  </p>
+                  <p className="mt-2">
+                    For customers in Brodipet and Arundalpet areas (within a 2 km radius), doorstep service is provided free of charge.
+                  </p>
+                </div>
+                <div className="mt-8">
+                  <a
+                    href="/contact"
+                    className="inline-block px-6 py-3 bg-[#0B2545] text-white rounded-md font-semibold shadow hover:bg-[#134B70] transition-colors duration-300"
+                  >
+                    Contact Us for Bulk Orders
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>

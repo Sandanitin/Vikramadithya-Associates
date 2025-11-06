@@ -15,7 +15,7 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0B2545] text-white shadow-xl">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white text-[#0B2545] shadow-xl">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-20">
           <div className="flex items-center">
@@ -39,8 +39,8 @@ const Navbar = () => {
                       to={link.path}
                       className={`px-4 py-3 rounded-lg text-lg font-bold transition-all duration-300 flex items-center ${
                         location.pathname === link.path
-                          ? 'text-[#D4AF37] bg-[#134B70]'
-                          : 'text-white hover:text-[#D4AF37] hover:bg-[#134B70]'
+                          ? 'text-[#D4AF37] bg-[#F5E6CA]'
+                          : 'text-[#0B2545] hover:text-[#D4AF37] hover:bg-[#F5E6CA]'
                       }`}
                     >
                       {link.name}
@@ -51,7 +51,7 @@ const Navbar = () => {
                     
                     {/* Dropdown menu */}
                     {isServicesDropdownOpen && (
-                      <div className="absolute left-0 mt-2 w-64 bg-white rounded-lg shadow-xl z-50">
+                      <div className="absolute left-0 mt-2 w-64 bg-white rounded-lg shadow-xl z-50 border border-[#E2E8F0]">
                         <div className="py-2">
                           {categories.map((category) => (
                             <Link
@@ -76,8 +76,8 @@ const Navbar = () => {
                   to={link.path}
                   className={`px-4 py-3 rounded-lg text-lg font-bold transition-all duration-300 ${
                     location.pathname === link.path
-                      ? 'text-[#D4AF37] bg-[#134B70]'
-                      : 'text-white hover:text-[#D4AF37] hover:bg-[#134B70]'
+                      ? 'text-[#D4AF37] bg-[#F5E6CA]'
+                      : 'text-[#0B2545] hover:text-[#D4AF37] hover:bg-[#F5E6CA]'
                   }`}
                 >
                   {link.name}
@@ -90,7 +90,7 @@ const Navbar = () => {
           <div className="md:hidden flex items-center">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="inline-flex items-center justify-center p-3 rounded-md text-white hover:text-[#D4AF37] focus:outline-none"
+              className="inline-flex items-center justify-center p-3 rounded-md text-[#0B2545] hover:text-[#D4AF37] focus:outline-none"
             >
               <svg
                 className={`${isMenuOpen ? 'hidden' : 'block'} h-8 w-8`}
@@ -116,7 +116,7 @@ const Navbar = () => {
       </div>
       
       {/* Mobile menu */}
-      <div className={`${isMenuOpen ? 'block' : 'hidden'} md:hidden bg-[#0B2545]`}>
+      <div className={`${isMenuOpen ? 'block' : 'hidden'} md:hidden bg-white border-t border-[#E2E8F0]`}>
         <div className="px-4 pt-4 pb-6 space-y-3 sm:px-6">
           {navLinks.map((link) => (
             <Link
@@ -124,8 +124,8 @@ const Navbar = () => {
               to={link.path}
               className={`block px-5 py-4 rounded-lg text-lg font-bold ${
                 location.pathname === link.path
-                  ? 'text-[#D4AF37] bg-[#134B70]'
-                  : 'text-white hover:text-[#D4AF37] hover:bg-[#134B70]'
+                  ? 'text-[#D4AF37] bg-[#F5E6CA]'
+                  : 'text-[#0B2545] hover:text-[#D4AF37] hover:bg-[#F5E6CA]'
               }`}
               onClick={() => setIsMenuOpen(false)}
             >

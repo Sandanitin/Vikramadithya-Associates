@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import HeroSection from '../components/HeroSection';
-import ServiceCard from '../components/ServiceCard';
 import categories from '../data/categories';
 import services from '../data/services';
 import emailjs from '@emailjs/browser';
+import SEO from '../components/SEO';
 
 const Services = () => {
   // Get all categories without filtering
@@ -88,7 +87,7 @@ const Services = () => {
     console.log('Sending email with data:', formData);
     
     // Send email using EmailJS with the same parameters as Contact.jsx
-    emailjs.send('service_j1it8n7', 'template_uvnmczx', formData)
+    emailjs.send('service_3pivxzk', 'template_7xpv82j', formData)
       .then((result) => {
         console.log('Email sent successfully:', result.text);
         console.log('Full result:', result);
@@ -140,6 +139,28 @@ const Services = () => {
 
   return (
     <div>
+      <SEO 
+        title="Services"
+        description="Explore our comprehensive range of financial, loan, insurance, and online services in Guntur, Andhra Pradesh. From personal loans to business registration, we've got you covered."
+        keywords="services, financial services, loan services, insurance services, business registration, GST, income tax, PAN card, passport services, RTO services"
+        url="/services"
+      />
+      
+      {/* Hero Section */}
+      <section className="relative w-full min-h-[60vh] flex items-center overflow-hidden bg-[#0B2545]">
+        <div className="absolute inset-0 bg-black/70"></div>
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <div className="text-center">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-[#D4AF37] mb-6 leading-tight">
+              Our Services
+            </h1>
+            <p className="text-xl md:text-2xl text-gray-200 mb-10 max-w-3xl mx-auto leading-relaxed">
+              Comprehensive solutions for all your financial, legal, and government service needs
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Categories Overview */}
       <section className="py-16 bg-[#FAF8F1]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

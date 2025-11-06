@@ -4,6 +4,7 @@ import ServiceCard from '../components/ServiceCard';
 import TestimonialCard from '../components/TestimonialCard';
 import categories from '../data/categories';
 import testimonials from '../data/testimonials';
+import SEO from '../components/SEO';
 
 const Home = () => {
   // Get top 6 categories for featured services
@@ -14,6 +15,13 @@ const Home = () => {
 
   return (
     <div>
+      <SEO 
+        title="Home"
+        description="Vikramadithya Associates - Your one-stop destination for financial, loan, insurance, and online services in Guntur, Andhra Pradesh. Trusted by 1000+ clients."
+        keywords="financial services, loan services, insurance services, online services, business registration, GST, income tax, PAN card, passport services"
+        url="/"
+      />
+      
       {/* Hero Section */}
       <HeroSection
         title="Your One-Stop Destination for Financial & Online Services"
