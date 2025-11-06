@@ -4,11 +4,7 @@ import HeroSection from '../components/HeroSection';
 const About = () => {
   return (
     <div>
-      {/* Hero Section */}
-      <HeroSection
-        title="About Our Service Center"
-        subtitle="Comprehensive financial, legal and government solutions — trusted, professional, and client-focused"
-      />
+   
 
       {/* Introduction */}
       <section className="py-16 bg-white">

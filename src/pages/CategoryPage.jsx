@@ -1,12 +1,39 @@
 import { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useLocation } from 'react-router-dom';
 import categories from '../data/categories';
 import services from '../data/services';
+import emailjs from '@emailjs/browser';
 
 const CategoryPage = () => {
   const { categoryId, serviceId } = useParams();
+  const location = useLocation();
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedCategories, setExpandedCategories] = useState({});
+  
+  // Form state
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    service: '',
+    message: ''
+  });
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  
+  // Get subcategory from URL query params
+  const getSubcategoryFromUrl = () => {
+    const searchParams = new URLSearchParams(location.search);
+    return searchParams.get('sub');
+  };
+  
+  const getMainCategoryFromUrl = () => {
+    const searchParams = new URLSearchParams(location.search);
+    return searchParams.get('main');
+  };
+  
+  const subcategory = getSubcategoryFromUrl();
+  const mainCategoryParam = getMainCategoryFromUrl();
   
   // Find the category
   const category = categories.find(cat => cat.id === categoryId);
@@ -33,7 +60,11 @@ const CategoryPage = () => {
     let currentSubCategories = [];
     
     servicesList.forEach((service, index) => {
-      if (!service.startsWith('  •')) {
+      // Check if this is a subcategory (starts with spaces and bullet)
+      if (service.startsWith('  •')) {
+        // Add to subcategories
+        currentSubCategories.push(service);
+      } else {
         // If we have a previous main category, save it
         if (currentMainCategory) {
           grouped.push({
@@ -44,9 +75,6 @@ const CategoryPage = () => {
         // Start new main category
         currentMainCategory = service;
         currentSubCategories = [];
-      } else {
-        // Add to subcategories
-        currentSubCategories.push(service);
       }
     });
     
@@ -67,6 +95,69 @@ const CategoryPage = () => {
       ...prev,
       [categoryName]: !prev[categoryName]
     }));
+  };
+  
+  // Handle form input changes
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+  
+  // Handle form submission
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    
+    // Set the service name in the form data
+    const serviceData = {
+      ...formData,
+      service: specificService ? specificService.name : (subcategory || 'Service Inquiry')
+    };
+    
+    // Send email using EmailJS
+    emailjs.send('service_j1it8n7', 'template_uvnmczx', serviceData)
+      .then((result) => {
+        console.log('Email sent successfully:', result.text);
+        setIsSubmitted(true);
+        
+        // Reset form after submission
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          service: '',
+          message: ''
+        });
+        
+        // Reset submission status after 5 seconds
+        setTimeout(() => {
+          setIsSubmitted(false);
+        }, 5000);
+      })
+      .catch((error) => {
+        console.error('Failed to send email:', error);
+        alert('Failed to send message. Please try again later.');
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+  
+  // Handle subcategory click - navigate to subcategory form
+  const handleSubcategoryClick = (mainCategory, subCategory) => {
+    // Navigate to the same page but with subcategory parameter
+    const subCategoryName = subCategory.replace('  • ', '');
+    window.location.href = `${window.location.pathname}?sub=${encodeURIComponent(subCategoryName)}`;
+  };
+  
+  // Handle main category click - navigate to main category form
+  const handleMainCategoryClick = (mainCategory) => {
+    // Navigate to the same page but with main category parameter
+    const mainCategoryName = mainCategory.replace('  • ', '');
+    window.location.href = `${window.location.pathname}?main=${encodeURIComponent(mainCategoryName)}`;
   };
 
   // If specific service is requested, show only that service
@@ -91,7 +182,7 @@ const CategoryPage = () => {
         {/* Service Details */}
         <section className="py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="bg-white rounded-lg shadow-lg p-8">
+            <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
               <div className="text-center">
                 <h3 className="text-2xl font-bold text-[#0B2545] mb-4">Available Services</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -107,6 +198,489 @@ const CategoryPage = () => {
                   ))}
                 </div>
               </div>
+            </div>
+            
+            {/* Email Form Section */}
+            <div className="bg-white rounded-lg shadow-lg p-8">
+              <div className="text-center mb-8">
+                <h3 className="text-2xl font-bold text-[#0B2545] mb-2">Request This Service</h3>
+                <p className="text-[#222222]">Fill out the form below and we'll get back to you shortly</p>
+              </div>
+              
+              {isSubmitted ? (
+                <div className="rounded-md bg-green-50 p-4 mb-6">
+                  <div className="flex">
+                    <div className="flex-shrink-0">
+                      <svg className="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path>
+                      </svg>
+                    </div>
+                    <div className="ml-3">
+                      <h3 className="text-sm font-medium text-green-800">
+                        Message Sent Successfully!
+                      </h3>
+                      <div className="mt-2 text-sm text-green-700">
+                        <p>
+                          Thank you for your inquiry. We'll get back to you as soon as possible.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : null}
+              
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label htmlFor="name" className="block text-sm font-medium text-[#0B2545]">
+                      Name
+                    </label>
+                    <div className="mt-1">
+                      <input
+                        type="text"
+                        name="name"
+                        id="name"
+                        required
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        className="py-3 px-4 block w-full shadow-sm focus:ring-[#134B70] focus:border-[#134B70] border-[#D4AF37] rounded-md text-[#222222] bg-white"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-medium text-[#0B2545]">
+                      Email
+                    </label>
+                    <div className="mt-1">
+                      <input
+                        type="email"
+                        name="email"
+                        id="email"
+                        required
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        className="py-3 px-4 block w-full shadow-sm focus:ring-[#134B70] focus:border-[#134B70] border-[#D4AF37] rounded-md text-[#222222] bg-white"
+                      />
+                    </div>
+                  </div>
+                </div>
+                
+                <div>
+                  <label htmlFor="phone" className="block text-sm font-medium text-[#0B2545]">
+                    Phone Number
+                  </label>
+                  <div className="mt-1">
+                    <input
+                      type="tel"
+                      name="phone"
+                      id="phone"
+                      required
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      className="py-3 px-4 block w-full shadow-sm focus:ring-[#134B70] focus:border-[#134B70] border-[#D4AF37] rounded-md text-[#222222] bg-white"
+                    />
+                  </div>
+                </div>
+                
+                <div>
+                  <label htmlFor="service" className="block text-sm font-medium text-[#0B2545]">
+                    Service
+                  </label>
+                  <div className="mt-1">
+                    <input
+                      type="text"
+                      name="service"
+                      id="service"
+                      value={specificService.name}
+                      readOnly
+                      className="py-3 px-4 block w-full shadow-sm focus:ring-[#134B70] focus:border-[#134B70] border-[#D4AF37] rounded-md text-[#222222] bg-gray-100"
+                    />
+                  </div>
+                </div>
+                
+                <div>
+                  <label htmlFor="message" className="block text-sm font-medium text-[#0B2545]">
+                    Message
+                  </label>
+                  <div className="mt-1">
+                    <textarea
+                      id="message"
+                      name="message"
+                      rows={4}
+                      value={formData.message}
+                      onChange={handleInputChange}
+                      placeholder="Please provide any additional details about your service request..."
+                      className="py-3 px-4 block w-full shadow-sm focus:ring-[#134B70] focus:border-[#134B70] border-[#D4AF37] rounded-md text-[#222222] bg-white"
+                    ></textarea>
+                  </div>
+                </div>
+                
+                <div>
+                  <button
+                    type="submit"
+                    disabled={isLoading}
+                    className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#134B70] ${
+                      isLoading 
+                        ? 'bg-[#134B70] cursor-not-allowed' 
+                        : 'bg-[#0B2545] hover:bg-[#134B70]'
+                    }`}
+                  >
+                    {isLoading ? (
+                      <>
+                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Sending...
+                      </>
+                    ) : (
+                      'Send Request'
+                    )}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </section>
+      </div>
+    );
+  }
+  
+  // If subcategory is requested, show form for that subcategory
+  if (subcategory && category) {
+    const mainCategoryName = category.services.find(service => 
+      service === subcategory.replace('  • ', '') || 
+      service.includes(subcategory.replace('  • ', ''))
+    ) || subcategory.replace('  • ', '');
+    
+    return (
+      <div className="min-h-screen bg-[#FAF8F1]">
+        {/* Hero Section */}
+        <div className="relative bg-[#0B2545] text-white overflow-hidden">
+          <div className="absolute inset-0 bg-black opacity-50"></div>
+          <div className="relative max-w-7xl mx-auto px-4 py-24 sm:px-6 lg:px-8">
+            <div className="text-center">
+              <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">
+                <span className="block">{subcategory.replace('  • ', '')}</span>
+              </h1>
+              <p className="mt-3 max-w-md mx-auto text-xl text-[#F5E6CA] sm:text-lg md:mt-5 md:max-w-3xl">
+                Service Inquiry for {subcategory.replace('  • ', '')}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Subcategory Form Section */}
+        <section className="py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="bg-white rounded-lg shadow-lg p-8">
+              <div className="text-center mb-8">
+                <h3 className="text-2xl font-bold text-[#0B2545] mb-2">Request This Service</h3>
+                <p className="text-[#222222]">Fill out the form below and we'll get back to you shortly</p>
+              </div>
+              
+              {isSubmitted ? (
+                <div className="rounded-md bg-green-50 p-4 mb-6">
+                  <div className="flex">
+                    <div className="flex-shrink-0">
+                      <svg className="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path>
+                      </svg>
+                    </div>
+                    <div className="ml-3">
+                      <h3 className="text-sm font-medium text-green-800">
+                        Message Sent Successfully!
+                      </h3>
+                      <div className="mt-2 text-sm text-green-700">
+                        <p>
+                          Thank you for your inquiry. We'll get back to you as soon as possible.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : null}
+              
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label htmlFor="name" className="block text-sm font-medium text-[#0B2545]">
+                      Name
+                    </label>
+                    <div className="mt-1">
+                      <input
+                        type="text"
+                        name="name"
+                        id="name"
+                        required
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        className="py-3 px-4 block w-full shadow-sm focus:ring-[#134B70] focus:border-[#134B70] border-[#D4AF37] rounded-md text-[#222222] bg-white"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-medium text-[#0B2545]">
+                      Email
+                    </label>
+                    <div className="mt-1">
+                      <input
+                        type="email"
+                        name="email"
+                        id="email"
+                        required
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        className="py-3 px-4 block w-full shadow-sm focus:ring-[#134B70] focus:border-[#134B70] border-[#D4AF37] rounded-md text-[#222222] bg-white"
+                      />
+                    </div>
+                  </div>
+                </div>
+                
+                <div>
+                  <label htmlFor="phone" className="block text-sm font-medium text-[#0B2545]">
+                    Phone Number
+                  </label>
+                  <div className="mt-1">
+                    <input
+                      type="tel"
+                      name="phone"
+                      id="phone"
+                      required
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      className="py-3 px-4 block w-full shadow-sm focus:ring-[#134B70] focus:border-[#134B70] border-[#D4AF37] rounded-md text-[#222222] bg-white"
+                    />
+                  </div>
+                </div>
+                
+                <div>
+                  <label htmlFor="service" className="block text-sm font-medium text-[#0B2545]">
+                    Service
+                  </label>
+                  <div className="mt-1">
+                    <input
+                      type="text"
+                      name="service"
+                      id="service"
+                      value={subcategory.replace('  • ', '')}
+                      readOnly
+                      className="py-3 px-4 block w-full shadow-sm focus:ring-[#134B70] focus:border-[#134B70] border-[#D4AF37] rounded-md text-[#222222] bg-gray-100"
+                    />
+                  </div>
+                </div>
+                
+                <div>
+                  <label htmlFor="message" className="block text-sm font-medium text-[#0B2545]">
+                    Message
+                  </label>
+                  <div className="mt-1">
+                    <textarea
+                      id="message"
+                      name="message"
+                      rows={4}
+                      value={formData.message}
+                      onChange={handleInputChange}
+                      placeholder="Please provide any additional details about your service request..."
+                      className="py-3 px-4 block w-full shadow-sm focus:ring-[#134B70] focus:border-[#134B70] border-[#D4AF37] rounded-md text-[#222222] bg-white"
+                    ></textarea>
+                  </div>
+                </div>
+                
+                <div>
+                  <button
+                    type="submit"
+                    disabled={isLoading}
+                    className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#134B70] ${
+                      isLoading 
+                        ? 'bg-[#134B70] cursor-not-allowed' 
+                        : 'bg-[#0B2545] hover:bg-[#134B70]'
+                    }`}
+                  >
+                    {isLoading ? (
+                      <>
+                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Sending...
+                      </>
+                    ) : (
+                      'Send Request'
+                    )}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </section>
+      </div>
+    );
+  }
+  
+  // If main category is requested, show form for that main category
+  if (mainCategoryParam && category) {
+    return (
+      <div className="min-h-screen bg-[#FAF8F1]">
+        {/* Hero Section */}
+        <div className="relative bg-[#0B2545] text-white overflow-hidden">
+          <div className="absolute inset-0 bg-black opacity-50"></div>
+          <div className="relative max-w-7xl mx-auto px-4 py-24 sm:px-6 lg:px-8">
+            <div className="text-center">
+              <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">
+                <span className="block">{mainCategoryParam}</span>
+              </h1>
+              <p className="mt-3 max-w-md mx-auto text-xl text-[#F5E6CA] sm:text-lg md:mt-5 md:max-w-3xl">
+                Service Inquiry for {mainCategoryParam}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Category Form Section */}
+        <section className="py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="bg-white rounded-lg shadow-lg p-8">
+              <div className="text-center mb-8">
+                <h3 className="text-2xl font-bold text-[#0B2545] mb-2">Request This Service</h3>
+                <p className="text-[#222222]">Fill out the form below and we'll get back to you shortly</p>
+              </div>
+              
+              {isSubmitted ? (
+                <div className="rounded-md bg-green-50 p-4 mb-6">
+                  <div className="flex">
+                    <div className="flex-shrink-0">
+                      <svg className="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path>
+                      </svg>
+                    </div>
+                    <div className="ml-3">
+                      <h3 className="text-sm font-medium text-green-800">
+                        Message Sent Successfully!
+                      </h3>
+                      <div className="mt-2 text-sm text-green-700">
+                        <p>
+                          Thank you for your inquiry. We'll get back to you as soon as possible.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : null}
+              
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label htmlFor="name" className="block text-sm font-medium text-[#0B2545]">
+                      Name
+                    </label>
+                    <div className="mt-1">
+                      <input
+                        type="text"
+                        name="name"
+                        id="name"
+                        required
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        className="py-3 px-4 block w-full shadow-sm focus:ring-[#134B70] focus:border-[#134B70] border-[#D4AF37] rounded-md text-[#222222] bg-white"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-medium text-[#0B2545]">
+                      Email
+                    </label>
+                    <div className="mt-1">
+                      <input
+                        type="email"
+                        name="email"
+                        id="email"
+                        required
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        className="py-3 px-4 block w-full shadow-sm focus:ring-[#134B70] focus:border-[#134B70] border-[#D4AF37] rounded-md text-[#222222] bg-white"
+                      />
+                    </div>
+                  </div>
+                </div>
+                
+                <div>
+                  <label htmlFor="phone" className="block text-sm font-medium text-[#0B2545]">
+                    Phone Number
+                  </label>
+                  <div className="mt-1">
+                    <input
+                      type="tel"
+                      name="phone"
+                      id="phone"
+                      required
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      className="py-3 px-4 block w-full shadow-sm focus:ring-[#134B70] focus:border-[#134B70] border-[#D4AF37] rounded-md text-[#222222] bg-white"
+                    />
+                  </div>
+                </div>
+                
+                <div>
+                  <label htmlFor="service" className="block text-sm font-medium text-[#0B2545]">
+                    Service
+                  </label>
+                  <div className="mt-1">
+                    <input
+                      type="text"
+                      name="service"
+                      id="service"
+                      value={mainCategoryParam}
+                      readOnly
+                      className="py-3 px-4 block w-full shadow-sm focus:ring-[#134B70] focus:border-[#134B70] border-[#D4AF37] rounded-md text-[#222222] bg-gray-100"
+                    />
+                  </div>
+                </div>
+                
+                <div>
+                  <label htmlFor="message" className="block text-sm font-medium text-[#0B2545]">
+                    Message
+                  </label>
+                  <div className="mt-1">
+                    <textarea
+                      id="message"
+                      name="message"
+                      rows={4}
+                      value={formData.message}
+                      onChange={handleInputChange}
+                      placeholder="Please provide any additional details about your service request..."
+                      className="py-3 px-4 block w-full shadow-sm focus:ring-[#134B70] focus:border-[#134B70] border-[#D4AF37] rounded-md text-[#222222] bg-white"
+                    ></textarea>
+                  </div>
+                </div>
+                
+                <div>
+                  <button
+                    type="submit"
+                    disabled={isLoading}
+                    className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#134B70] ${
+                      isLoading 
+                        ? 'bg-[#134B70] cursor-not-allowed' 
+                        : 'bg-[#0B2545] hover:bg-[#134B70]'
+                    }`}
+                  >
+                    {isLoading ? (
+                      <>
+                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Sending...
+                      </>
+                    ) : (
+                      'Send Request'
+                    )}
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         </section>
@@ -193,7 +767,7 @@ const CategoryPage = () => {
                     <div key={index} className="border border-[#E2E8F0] rounded-lg overflow-hidden">
                       <div 
                         className="flex justify-between items-center p-4 bg-[#F5E6CA] cursor-pointer hover:bg-[#F5E6CA]/80 transition-colors duration-200"
-                        onClick={() => toggleCategory(group.mainCategory)}
+                        onClick={() => handleMainCategoryClick(group.mainCategory)}
                       >
                         <div className="flex items-center">
                           <svg className="h-5 w-5 text-[#0B2545] mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -215,7 +789,11 @@ const CategoryPage = () => {
                       {expandedCategories[group.mainCategory] && (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4 bg-white">
                           {group.subCategories.map((subCategory, subIndex) => (
-                            <div key={subIndex} className="p-3 bg-[#F5E6CA]/50 rounded-lg border-l-4 border-[#D4AF37] hover:shadow-sm transition-shadow duration-300">
+                            <div 
+                              key={subIndex} 
+                              className="p-3 bg-[#F5E6CA]/50 rounded-lg border-l-4 border-[#D4AF37] hover:shadow-sm transition-shadow duration-300 cursor-pointer"
+                              onClick={() => handleSubcategoryClick(group.mainCategory, subCategory)}
+                            >
                               <div className="flex items-center">
                                 <svg className="h-4 w-4 text-[#0B2545] mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
