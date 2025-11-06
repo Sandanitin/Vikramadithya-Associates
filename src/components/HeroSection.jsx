@@ -11,7 +11,7 @@ const HeroSection = ({
     <section 
       className="relative w-full min-h-[85vh] flex items-center overflow-hidden"
       style={{ 
-        backgroundImage: backgroundImage ? `url(${backgroundImage})` : 'none',
+        backgroundImage: backgroundImage ? url(${backgroundImage}) : 'none',
         backgroundSize: 'cover',
         backgroundPosition: 'center'
       }}
@@ -45,13 +45,26 @@ const HeroSection = ({
             </div>
           </div>
           
-          {/* Visual Element - Removed statistics section */}
+          {/* Visual Element */}
           <div className="hidden lg:block">
-            <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-8 border border-white/30 h-full flex items-center justify-center">
-              <div className="text-center">
-                <div className="text-6xl mb-4">✨</div>
-                <h3 className="text-2xl font-bold text-white mb-2">Trusted Service</h3>
-                <p className="text-gray-200">Professional solutions for all your needs</p>
+            <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-8 border border-white/30">
+              <div className="grid grid-cols-2 gap-6">
+                <div className="bg-white/30 p-6 rounded-xl text-center shadow-lg backdrop-blur-sm">
+                  <div className="text-4xl font-bold text-black mb-2">1000+</div>
+                  <div className="text-black font-medium">Clients Served</div>
+                </div>
+                <div className="bg-white/30 p-6 rounded-xl text-center shadow-lg backdrop-blur-sm">
+                  <div className="text-4xl font-bold text-black mb-2">500+</div>
+                  <div className="text-black font-medium">Projects Completed</div>
+                </div>
+                <div className="bg-white/30 p-6 rounded-xl text-center shadow-lg backdrop-blur-sm">
+                  <div className="text-4xl font-bold text-black mb-2">8+</div>
+                  <div className="text-black font-medium">Years Experience</div>
+                </div>
+                <div className="bg-white/30 p-6 rounded-xl text-center shadow-lg backdrop-blur-sm">
+                  <div className="text-4xl font-bold text-black mb-2">50+</div>
+                  <div className="text-black font-medium">Service Categories</div>
+                </div>
               </div>
             </div>
           </div>
