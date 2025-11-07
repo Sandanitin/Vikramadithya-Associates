@@ -275,6 +275,57 @@ const services = [
       'NOC (No Objection Certificate) 📄',
       'Ownership / Transfer Certificate 🔄'
     ]
+  },
+  // Student Services
+  {
+    id: 'online-exam-applications',
+    categoryId: 'student-services',
+    name: 'All Online Exam Applications',
+    description: 'Assistance with online exam applications for students',
+    subcategories: [
+      'Entrance Exams Application',
+      'University Exam Registration',
+      'Government Exam Applications',
+      'Professional Certification Applications'
+    ]
+  },
+  {
+    id: 'hall-ticket-download',
+    categoryId: 'student-services',
+    name: 'Hall Ticket Download',
+    description: 'Help with downloading hall tickets for various examinations',
+    subcategories: [
+      'University Hall Tickets',
+      'Entrance Exam Admit Cards',
+      'Government Exam Hall Tickets',
+      'Professional Exam Admit Cards'
+    ]
+  },
+  {
+    id: 'scholarship-application',
+    categoryId: 'student-services',
+    name: 'Scholarship Application Assistance',
+    description: 'Guidance and assistance with scholarship applications',
+    subcategories: [
+      'Government Scholarships',
+      'Private Scholarships',
+      'International Scholarships',
+      'Merit-Based Scholarships',
+      'Need-Based Scholarships'
+    ]
+  },
+  {
+    id: 'visa-services',
+    categoryId: 'student-services',
+    name: 'Visa Services',
+    description: 'Student visa services for studying abroad',
+    subcategories: [
+      'Student Visa Application',
+      'Visa Extension',
+      'Visa Renewal',
+      'Visa Consultation',
+      'Document Preparation'
+    ]
   }
 ];
 

@@ -301,8 +301,9 @@ const Contact = () => {
                     <div className="ml-4">
                       <h3 className="text-lg font-medium text-[#0B2545]">Office</h3>
                       <p className="mt-1 text-[#222222]">
-                        Brodipet & Arundalpet<br />
-                        Guntur, Andhra Pradesh<br />
+                        Shop No.1, Ground floor, Subba Reddy Complex<br />
+                        4/17 Brodipet, Guntur - 522002<br />
+                        Andhra Pradesh<br />
                         India
                       </p>
                     </div>

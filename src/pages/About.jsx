@@ -226,7 +226,7 @@ const About = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-extrabold sm:text-4xl">Doorstep Service Available</h2>
           <p className="mt-4 max-w-2xl mx-auto text-xl text-[#F5E6CA]">
-            Complimentary doorstep pickup and delivery within Brodipet and Arundalpet (2 km radius). Available by appointment.
+            Complimentary doorstep pickup and delivery within a 2 km radius of our Guntur office. Available by appointment.
           </p>
 
           <div className="mt-8">
@@ -235,7 +235,7 @@ const About = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
               </svg>
-              Brodipet & Arundalpet
+              Shop No.1, Ground floor, Subba Reddy Complex, 4/17 Brodipet, Guntur - 522002
             </div>
           </div>
 
@@ -281,7 +281,7 @@ const About = () => {
                     Free Doorstep Service
                   </p>
                   <p className="mt-2">
-                    For customers in Brodipet and Arundalpet areas (within a 2 km radius), doorstep service is provided free of charge.
+                    For customers within a 2 km radius of our Guntur office, doorstep service is provided free of charge.
                   </p>
                 </div>
                 <div className="mt-8">
