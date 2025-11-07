@@ -100,7 +100,7 @@ const About = () => {
                 </p>
 
                 <div className="w-full border-t border-gray-200 pt-4 text-left">
-                  <h4 className="font-semibold text-[#134B70]">A. D. Bhargav</h4>
+                  <h4 className="font-semibold text-[#134B70]">kakumanu gopal sundaraiah</h4>
                   <p className="text-[#222222]">Founder & Principal Consultant</p>
                   <p className="mt-1 text-sm text-gray-600">Specialized in taxation, compliance and government liaison services.</p>
                 </div>
@@ -125,7 +125,7 @@ const About = () => {
                 </p>
 
                 <div className="w-full border-t border-gray-200 pt-4 text-left">
-                  <h4 className="font-semibold text-[#134B70]">A. D. Bhargav</h4>
+                  <h4 className="font-semibold text-[#134B70]"></h4>
                   <p className="text-[#222222]">Founder & Principal Consultant</p>
                   <p className="mt-1 text-sm text-gray-600">Recognized for consistent client satisfaction and operational excellence.</p>
                 </div>

@@ -1,12 +1,9 @@
-const TestimonialCard = ({ name, role, content, avatar }) => {
+const TestimonialCard = ({ name, role, content }) => {
   return (
     <div className="bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
-      <div className="flex items-center mb-6">
-        <img className="w-16 h-16 rounded-full object-cover border-4 border-[#D4AF37]" src={avatar} alt={name} />
-        <div className="ml-6">
-          <h4 className="text-xl font-bold text-[#0B2545]">{name}</h4>
-          <p className="text-[#134B70] font-medium">{role}</p>
-        </div>
+      <div className="mb-6">
+        <h4 className="text-xl font-bold text-[#0B2545]">{name}</h4>
+        <p className="text-[#134B70] font-medium">{role}</p>
       </div>
       <p className="text-[#222222] italic text-lg">"{content}"</p>
       <div className="flex mt-6">

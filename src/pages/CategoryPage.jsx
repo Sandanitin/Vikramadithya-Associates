@@ -76,6 +76,13 @@ const CategoryPage = () => {
     return grouped;
   };
 
+  // Filter services to show only main categories (not subcategories)
+  const getMainCategoriesOnly = (categoryServices) => {
+    if (!category || !category.services) return [];
+    
+    return category.services.filter(service => !service.startsWith('  • '));
+  };
+
   // Toggle category expansion
   const toggleCategory = (categoryName) => {
     setExpandedCategories(prev => ({
@@ -141,7 +148,7 @@ const CategoryPage = () => {
     navigate(`${window.location.pathname}?main=${encodeURIComponent(mainCategoryName)}&sub=${encodeURIComponent(subCategoryName)}`);
   };
   
-  // Handle main category click - navigate to main category form
+  // Handle main category click - navigate to show subcategories
   const handleMainCategoryClick = (mainCategory) => {
     // Navigate to the same page but with main category parameter
     const mainCategoryName = mainCategory.replace('  • ', '');
@@ -524,7 +531,7 @@ const CategoryPage = () => {
                       type="text"
                       name="service"
                       id="service"
-                      value={`${mainCategoryParam} - ${subcategory}`}
+                      value={`${mainCategoryParam && subcategory ? `${mainCategoryParam} - ${subcategory}` : (subcategory || 'Service Inquiry')}`}
                       readOnly
                       className="py-3 px-4 pl-10 block w-full shadow-sm focus:ring-[#134B70] focus:border-[#134B70] border-[#D4AF37] rounded-md text-[#222222] bg-gray-100 font-medium"
                     />
@@ -589,15 +596,21 @@ const CategoryPage = () => {
     );
   }
   
-  // If main category is requested, show form for that main category
-  if (mainCategoryParam && category) {
+  // If main category is requested, show subcategories for that main category
+  if (mainCategoryParam && category && !subcategory) {
+    // Don't return a form yet, just show the subcategories
+    // Continue to the main render function to display subcategories
+  }
+  
+  // If subcategory is requested, show form for that subcategory
+  if (subcategory && category) {
     return (
       <div className="min-h-screen bg-[#FAF8F1]">
         <SEO 
-          title={`${mainCategoryParam} Services`}
-          description={`Request ${mainCategoryParam} services from Vikramadithya Associates in Guntur, Andhra Pradesh.`}
-          keywords={`${mainCategoryParam}, financial services, business services, loan services, insurance services`}
-          url={`/category/${categoryId}?main=${encodeURIComponent(mainCategoryParam)}`}
+          title={`${subcategory} Services`}
+          description={`Request ${subcategory} services from Vikramadithya Associates in Guntur, Andhra Pradesh.`}
+          keywords={`${subcategory}, financial services, business services, loan services, insurance services`}
+          url={`/category/${categoryId}?sub=${encodeURIComponent(subcategory)}`}
         />
         
         {/* Hero Section */}
@@ -606,16 +619,16 @@ const CategoryPage = () => {
           <div className="relative max-w-7xl mx-auto px-4 py-24 sm:px-6 lg:px-8">
             <div className="text-center">
               <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">
-                <span className="block">{mainCategoryParam}</span>
+                <span className="block">{subcategory}</span>
               </h1>
               <p className="mt-3 max-w-md mx-auto text-xl text-[#F5E6CA] sm:text-lg md:mt-5 md:max-w-3xl">
-                Service Inquiry for {mainCategoryParam}
+                Service Inquiry for {subcategory}
               </p>
             </div>
           </div>
         </div>
 
-        {/* Main Category Form Section */}
+        {/* Subcategory Form Section */}
         <section className="py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="bg-white rounded-lg shadow-lg p-8">
@@ -732,7 +745,7 @@ const CategoryPage = () => {
                       type="text"
                       name="service"
                       id="service"
-                      value={mainCategoryParam}
+                      value={`${mainCategoryParam && subcategory ? `${mainCategoryParam} - ${subcategory}` : (subcategory || 'Service Inquiry')}`}
                       readOnly
                       className="py-3 px-4 pl-10 block w-full shadow-sm focus:ring-[#134B70] focus:border-[#134B70] border-[#D4AF37] rounded-md text-[#222222] bg-gray-100 font-medium"
                     />
@@ -795,6 +808,12 @@ const CategoryPage = () => {
         </section>
       </div>
     );
+  }
+
+  // If main category is requested but no subcategory, show subcategories for that main category
+  if (mainCategoryParam && category && !subcategory) {
+    // Don't return a form yet, just show the subcategories
+    // Continue to the main render function to display subcategories
   }
 
   if (!category) {
@@ -914,12 +933,16 @@ const CategoryPage = () => {
                             <h4 className="text-xl font-bold text-[#0B2545] mb-4">Available Services</h4>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                               {service.subcategories.map((sub, index) => (
-                                <div key={index} className="p-3 bg-[#F5E6CA] rounded-lg">
+                                <div 
+                                  key={index} 
+                                  className="p-3 bg-[#F5E6CA] rounded-lg cursor-pointer hover:shadow-sm transition-shadow duration-300"
+                                  onClick={() => handleSubcategoryClick(service.name, sub)}
+                                >
                                   <div className="flex items-center">
                                     <svg className="h-4 w-4 text-[#0B2545] mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                                     </svg>
-                                    <span className="text-[#0B2545] font-medium text-sm">{sub}</span>
+                                    <span className="text-[#0B2545] font-medium text-sm">{sub.replace('  • ', '')}</span>
                                   </div>
                                 </div>
                               ))}
@@ -949,49 +972,93 @@ const CategoryPage = () => {
               <div className="text-center">
                 <h3 className="text-2xl font-bold text-[#0B2545] mb-4">Services Overview</h3>
                 <div className="space-y-4">
-                  {groupedServices.map((group, index) => (
-                    <div key={index} className="border border-[#E2E8F0] rounded-lg overflow-hidden">
+                  {/* Show only main categories when no specific main category is selected */}
+                  {mainCategoryParam ? (
+                    // If a main category is selected, show its subcategories
+                    groupedServices
+                      .filter(group => group.mainCategory.replace('  • ', '') === mainCategoryParam)
+                      .map((group, index) => (
+                        <div key={index} className="border border-[#E2E8F0] rounded-lg overflow-hidden">
+                          <div 
+                            className="flex justify-between items-center p-4 bg-[#F5E6CA] cursor-pointer hover:bg-[#F5E6CA]/80 transition-colors duration-200"
+                            onClick={() => toggleCategory(group.mainCategory)}
+                          >
+                            <div className="flex items-center">
+                              <svg className="h-5 w-5 text-[#0B2545] mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
+                              </svg>
+                              <span className="text-[#0B2545] font-bold">{group.mainCategory.replace('  • ', '')}</span>
+                            </div>
+                            <svg 
+                              className={`h-5 w-5 text-[#0B2545] transform transition-transform duration-200 ${expandedCategories[group.mainCategory] ? 'rotate-180' : ''}`}
+                              fill="none" 
+                              stroke="currentColor" 
+                              viewBox="0 0 24 24" 
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                          </div>
+                          
+                          {expandedCategories[group.mainCategory] && (
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4 bg-white">
+                              {group.subCategories.map((subCategory, subIndex) => (
+                                <div 
+                                  key={subIndex} 
+                                  className="p-3 bg-[#F5E6CA]/50 rounded-lg border-l-4 border-[#D4AF37] hover:shadow-sm transition-shadow duration-300 cursor-pointer"
+                                  onClick={() => handleSubcategoryClick(group.mainCategory, subCategory)}
+                                >
+                                  <div className="flex items-center">
+                                    <svg className="h-4 w-4 text-[#0B2545] mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                    <span className="text-[#0B2545] font-medium text-sm">{subCategory.replace('  • ', '')}</span>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      ))
+                  ) : (
+                    // If no main category is selected, show only main categories
+                    getMainCategoriesOnly().map((mainCategory, index) => (
                       <div 
-                        className="flex justify-between items-center p-4 bg-[#F5E6CA] cursor-pointer hover:bg-[#F5E6CA]/80 transition-colors duration-200"
-                        onClick={() => handleMainCategoryClick(group.mainCategory)}
+                        key={index} 
+                        className="p-4 bg-[#F5E6CA] rounded-lg cursor-pointer hover:bg-[#F5E6CA]/80 transition-colors duration-200 flex items-center justify-between"
+                        onClick={() => {
+                          // Check if this main category has subcategories
+                          const mainCategoryIndex = category.services.indexOf(mainCategory);
+                          const nextItem = category.services[mainCategoryIndex + 1];
+                          const hasSubcategories = nextItem && nextItem.startsWith('  • ');
+                          
+                          if (hasSubcategories) {
+                            handleMainCategoryClick(mainCategory);
+                          } else {
+                            // Navigate to form page for this service
+                            const service = services.find(s => s.categoryId === categoryId && s.name === mainCategory.replace('  • ', ''));
+                            if (service) {
+                              navigate(`/category/${categoryId}/${service.id}`);
+                            } else {
+                              // If not found in services.js, treat as a simple service request
+                              const mainCategoryName = mainCategory.replace('  • ', '');
+                              navigate(`${window.location.pathname}?main=${encodeURIComponent(mainCategoryName)}&sub=${encodeURIComponent(mainCategoryName)}`);
+                            }
+                          }
+                        }}
                       >
                         <div className="flex items-center">
                           <svg className="h-5 w-5 text-[#0B2545] mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
                           </svg>
-                          <span className="text-[#0B2545] font-bold">{group.mainCategory.replace('  • ', '')}</span>
+                          <span className="text-[#0B2545] font-bold">{mainCategory.replace('  • ', '')}</span>
                         </div>
-                        <svg 
-                          className={`h-5 w-5 text-[#0B2545] transform transition-transform duration-200 ${expandedCategories[group.mainCategory] ? 'rotate-180' : ''}`}
-                          fill="none" 
-                          stroke="currentColor" 
-                          viewBox="0 0 24 24" 
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+                        <svg className="h-5 w-5 text-[#0B2545]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
                         </svg>
                       </div>
-                      
-                      {expandedCategories[group.mainCategory] && (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4 bg-white">
-                          {group.subCategories.map((subCategory, subIndex) => (
-                            <div 
-                              key={subIndex} 
-                              className="p-3 bg-[#F5E6CA]/50 rounded-lg border-l-4 border-[#D4AF37] hover:shadow-sm transition-shadow duration-300 cursor-pointer"
-                              onClick={() => handleSubcategoryClick(group.mainCategory, subCategory)}
-                            >
-                              <div className="flex items-center">
-                                <svg className="h-4 w-4 text-[#0B2545] mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                                </svg>
-                                <span className="text-[#0B2545] font-medium text-sm">{subCategory.replace('  • ', '')}</span>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  ))}
+                    ))
+                  )}
                 </div>
               </div>
             </div>

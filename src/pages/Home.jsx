@@ -199,7 +199,6 @@ const Home = () => {
                 name={testimonial.name}
                 role={testimonial.role}
                 content={testimonial.content}
-                avatar={testimonial.avatar}
               />
             ))}
           </div>
